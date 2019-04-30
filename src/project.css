@@ -1,0 +1,495 @@
+* {
+  margin: 0;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
+html {
+  font-size: 16px;
+}
+
+#mainDiv {
+  position: fixed;
+  right: -50%;
+  top: 0;
+  z-index: 9998;
+  width: 50%;
+  height: 100%;
+  border-left: 1px solid #dddddd;
+  background: #ffffff;
+  box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-flow: column nowrap;
+  -webkit-transition: all 200ms ease-in-out 0s;
+  -ms-transition: all 200ms ease-in-out 0s;
+  transition: all 200ms ease-in-out 0s;
+}
+
+body header.gb_Wa {
+  padding-right: 15px;
+}
+
+#mainDiv.expanded {
+  right: 0;
+}
+
+.header {
+  /*height: 52px;*/
+  background-color: #4a90e2;
+  font-family: "MS Reference Sans Serif";
+}
+
+.title {
+  padding: 15px 0;
+  font-size: 20px;
+  color: white;
+}
+
+.header-menu {
+  float: right;
+  list-style: none;
+  text-decoration: none;
+  padding: 0px;
+  margin: 0;
+}
+
+.header-menu li a {
+  color: white;
+  text-decoration: none;
+  padding: 20px 20px;
+  display: block;
+  font-size: 15px;
+}
+
+.header-menu li {
+  float: left;
+  text-align: center;
+  text-decoration: none;
+  font-size: 15px;
+  padding-top: 0px;
+}
+
+.header-menu li a .user {
+  padding: 5px;
+  display: block;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  font-size: 14px;
+  width: 25px;
+  height: 25px;
+  line-height: 1;
+}
+
+/*.menu li:hover{
+	
+	background-color: blue;
+
+}
+
+.menu{
+
+	float: right;
+	list-style: none;
+	text-decoration: none;
+}*/
+
+.headerWrap {
+  /*position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 9999;*/
+  flex-shrink: 1;
+}
+
+.container {
+  width: 100% !important;
+}
+
+.tab-content {
+}
+
+.tab-content > .tab-pane {
+  display: none;
+  padding: 0 0 20px;
+}
+
+.tab-content > .tab-pane.active {
+  display: block;
+}
+
+.gmail {
+  font-size: 16px;
+  color: #9b9b9b;
+}
+
+.gmail .count {
+  font-size: 20px;
+  color: #000000;
+}
+
+.checked i {
+  font-size: 36px;
+  color: #d0021b;
+}
+
+.sent i {
+  font-size: 36px;
+  color: #4a90e2;
+}
+
+.received i {
+  font-size: 36px;
+  color: #49e461;
+}
+
+.info {
+  border: 1px solid #f6f6f6;
+  border-radius: 4px;
+  text-align: center;
+  padding: 30px;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+}
+
+.lineGraph {
+  border: 1px solid #f6f6f6;
+  border-radius: 4px;
+  text-align: center;
+  padding: 30px;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+}
+
+.emailSent {
+  font-size: 15px;
+}
+
+.sentSquare {
+  color: blue;
+}
+
+.receivedSquare {
+  color: green;
+  padding-left: 10px;
+}
+.graphDisplay {
+  height: 350px;
+}
+
+.pieChart {
+  font-size: 20px;
+  margin-bottom: 30px;
+}
+
+.category {
+  border: 1px solid #f6f6f6;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  height: 350px;
+  padding: 15px;
+}
+
+.emailRepliedPane > div {
+  float: left;
+  width: 50%;
+  padding: 40px 0px;
+  text-align: center;
+}
+
+.emailRepliedPane > div > div {
+  width: 85px;
+}
+
+.emailRepliedPane > div:first-child {
+  border-bottom: 1px solid #d4cdcd;
+}
+.emailRepliedPane > div:nth-child(2) {
+  border-bottom: 1px solid #d4cdcd;
+}
+.emailRepliedPane {
+  margin: 0 50px;
+}
+.emailReplied {
+  border: 1px solid #f6f6f6;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  height: 350px;
+  padding-top: 15px;
+}
+
+.fixText {
+  color: #9b9b9b;
+  font-size: 18px;
+}
+
+.number {
+  font-size: 24px;
+}
+
+.readAndUnread {
+  border: 1px solid #f6f6f6;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  height: 350px;
+  padding: 15px;
+  margin-bottom: 30px;
+}
+
+.averageResponse {
+  border: 1px solid #f6f6f6;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  height: 170px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.delayedResponse {
+  border: 1px solid #f6f6f6;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  height: 170px;
+  padding: 15px;
+}
+
+.tabNav {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.nav > li {
+  cursor: pointer;
+}
+
+.nav > li > a {
+  padding: 5px 10px;
+}
+
+.expandHandle {
+  position: absolute;
+  left: -25px;
+  top: 0;
+  z-index: 9999;
+  width: 25px;
+  height: 25px;
+  padding: 5px;
+  text-align: center;
+  display: block;
+  background: #4a90e2;
+  color: #ffffff;
+  font-size: 11px;
+  box-shadow: -3px 3px 3px rgba(0, 0, 0, 0.15);
+  border-left: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+}
+.expandHandle:hover {
+  color: #eeeeee;
+}
+
+.expandHandle:focus {
+  color: #eeeeee;
+}
+
+.mostContactedPeople {
+  border: 1px solid #f6f6f6;
+  border-radius: 4px;
+  text-align: center;
+  padding: 15px;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+}
+
+.commonHeading {
+  border-bottom: 1px solid #d4cdcd;
+  color: #9b9b9b;
+}
+.nav#myPill2 {
+  margin-top: 15px;
+}
+.nav#myPill2 > li > a {
+  color: #ffffff;
+  background: none;
+}
+
+.nav#myPill2 > li.active > a {
+  color: #ffffff;
+}
+
+#mainDiv > .tab-content {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 0 auto;
+}
+
+#mainDiv > .tab-content > .tab-pane.active {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 0 auto;
+}
+
+#mainDiv > .tab-content > .tab-pane > .tabPanel {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 0 auto;
+}
+
+#mainDiv > .tab-content > .tab-pane > .tabPanel .homeTabs {
+  flex-shrink: 1;
+}
+
+#mainDiv > .tab-content > .tab-pane > .tabPanel .mainDiv {
+  position: relative;
+  flex: 1 0 500px;
+  overflow-y: auto;
+}
+.mainDiv h2 {
+  font-size: 15px;
+  text-align: center;
+  margin: 0 15px 15px;
+  font-weight: normal;
+}
+
+.mainDiv {
+  padding-top: 15px;
+}
+
+.about {
+  padding: 15px;
+}
+
+.about h2 {
+  text-align: center;
+}
+
+.settings {
+  padding: 15px;
+}
+
+.settings h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.settingsContent {
+  border: 1px solid #f6f6f6;
+  border-radius: 4px;
+  text-align: left;
+  padding: 30px;
+  box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
+  margin-bottom: 30px;
+}
+
+.heading {
+  margin: 0;
+}
+
+.description {
+  margin-bottom: 20px;
+  color: #9b9b9b;
+}
+
+.toggleButton {
+  margin-top: 15px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 18px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.dateWise .dateWiseDesc {
+  font-size: 13px;
+  color: #777777;
+  margin-bottom: 20px;
+}
+
+.dateWise .absoluteBox .absDate {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.dateWise .absoluteBox .absDate .dateCaption {
+  font-size: 13px;
+  color: #999999;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.dateWise .absoluteBox .absDate input[type="text"] {
+  display: inline-block;
+  vertical-align: middle;
+  width: 150px;
+}
+
+.dateWise {
+  padding: 15px;
+}

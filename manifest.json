@@ -6,17 +6,15 @@
   "author": "Jostein Kjønigsen <jostein@kjonigsen.net>",
 
   "description": "A minimal extension which demonstrates how to create a extension with Gmail.JS and NodeJS-based bundling.",
-  "browser_action": {
-    "default_icon": "google.svg",
-    "default_popup": "popup.html"
-  },
   "content_scripts": [
     {
       "matches": ["*://mail.google.com/*"],
       "js": ["src/extensionInjector.js"],
+      "css": ["src/project.css"],
       "run_at": "document_end"
     }
   ],
+  "content_security_policy": "script-src 'self' https://ajax.googleapis.com  object-src 'self' 'sha256-15ObqXJ29DdCBBFUMDEYKJ8/6obpXJSicFOyxSLeBMU=' ",
 
   "web_accessible_resources": ["dist/extension.js"],
 
