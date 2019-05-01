@@ -6,6 +6,10 @@ const GmailFactory = require("gmail-js");
 const gmail = new GmailFactory.Gmail($);
 
 window.gmail = gmail;
+const serverURL = "https://74cabbbf.ngrok.io";
+let dailyCheckedMailCountPieChart = 0;
+let dailySentMailCountPieChart = 0;
+let dailyReceivedMailCountPieChart = 0;
 
 var div1 = document.createElement("div");
 div1.id = "mainDiv";
@@ -16,9 +20,11 @@ div1.id = "mainDiv";
 $("body").append(
   `<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" type="text/css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>`
 );
-$("#mainDiv").append(`
+$("#mainDiv").append(
+  `
   <a class="expandHandle" href="javascript:void(0)"><i class="fa fa-line-chart" aria-hidden="true"></i></a>
   <div class="headerWrap">
     <div class="container-fluid header">
@@ -93,8 +99,8 @@ $("#mainDiv").append(`
                       <div class="gmail checked">
                         <i class="fa fa-google" aria-hidden="true"></i>
                         <p> Gmail checked in a day</p>
-                        <div class="count">
-                          70
+                        <div id="dailyCheckedMailCountLabel" class="count">
+                          0
                         </div>
                       </div>
                     </div>
@@ -103,8 +109,8 @@ $("#mainDiv").append(`
                       <div class="gmail sent">
                         <i class="fa fa-paper-plane" aria-hidden="true"></i>
                         <p> Email sent in a day</p>
-                        <div class="count">
-                          70
+                        <div id="dailySentMailCountLabel" class="count">
+                          0
                         </div>
                       </div>
                     </div>
@@ -113,8 +119,8 @@ $("#mainDiv").append(`
                       <div class="gmail received">
                         <i class="fa fa-envelope" aria-hidden="true"></i>
                         <p> Email received in a day</p>
-                        <div class="count">
-                          70
+                        <div id="dailyReceivedMailCountLabel" class="count">
+                          0
                         </div>
                       </div>
                     </div>    
@@ -155,9 +161,9 @@ $("#mainDiv").append(`
             </div>
 
             
-            <div class="row pieChart">
+            <div id="dailyCheckedMailPieChart" class="row pieChart">
               <div class="col-lg-6 ">
-                <div class="category">
+                <div id="dailyMailPieChartCanvasDiv" class="category">
                   <h2>
                     Email By Category
                   </h2>
@@ -968,7 +974,18 @@ $("#mainDiv").append(`
 
 <div id="demo">
 </div>
-`);
+`
+);
+
+$(".nav-pill li a").click(function() {
+  $(".nav-pill li").removeClass("active");
+  $(this)
+    .parent("li")
+    .addClass("active");
+  var activeTab = $(this).attr("data-target");
+  $(".tab-content .tab-pane").removeClass("active");
+  $(activeTab).show();
+});
 
 $(".expandHandle").click(function() {
   $(this)
@@ -980,85 +997,135 @@ $(".dropMenu").change(function() {
   $(".emailAction").html($(this).val());
 });
 
-const serverURL = "https://dffd7efa.ngrok.io";
-
 // Command for get port for listening like 3000
 // lsof -i -P -n | grep LISTEN
 
+// ====================Daily====================
+function getDailyCheckedMailCount() {
+  return new Promise((resolve, reject) => {
+    $.get(serverURL + "/mails/dailyChecked", function(data, status) {
+      console.log("dailyCheckedMailCount");
+      console.log(data.mailCount);
+      document.getElementById("dailyCheckedMailCountLabel").innerText =
+        data.mailCount;
+      // dailyCheckedMailCountPieChart = data.mailCount;
+      return resolve(data.mailCount);
+    });
+  });
+}
+function getDailySentMailCount() {
+  return new Promise((resolve, reject) => {
+    $.get(serverURL + "/mails/dailySent", function(data, status) {
+      console.log("dailySentMailCountLabel");
+      console.log(data.mailCount);
+      document.getElementById("dailySentMailCountLabel").innerText =
+        data.mailCount;
+      return resolve(data.mailCount);
+    });
+  });
+}
+function getDailyReceivedMailCount() {
+  return new Promise((resolve, reject) => {
+    $.get(serverURL + "/mails/dailyReceived", function(data, status) {
+      console.log("dailyReceivcedMailCountLabel");
+      console.log(data.mailCount);
+      document.getElementById("dailyReceivedMailCountLabel").innerText =
+        data.mailCount;
+      return resolve(data.mailCount);
+    });
+  });
+}
+// ====================Daily====================
+
 // // DONE checked saved ============================
 
-// gmail.observe.on("view_email", domEmail => {
-//   // console.log("Looking at email:", domEmail);
-//   console.log("VIEW MAIL..................");
-//   const emailData = gmail.new.get.email_data(domEmail);
-//   console.log("Email data:", emailData);
+gmail.observe.on("view_email", domEmail => {
+  // console.log("Looking at email:", domEmail);
+  console.log("VIEW MAIL..................");
+  const emailData = gmail.new.get.email_data(domEmail);
+  console.log("Email data:", emailData);
 
-//   const emailDataToSend = {
-//     userMailId: gmail.get.user_email(),
-//     mailId: emailData.id,
-//     subject: emailData.subject,
-//     from: emailData.from,
-//     to: emailData.to,
-//     timestamp: emailData.timestamp
-//   };
+  const emailDataToSend = {
+    userMailId: gmail.get.user_email(),
+    mailId: emailData.id,
+    subject: emailData.subject,
+    from: emailData.from,
+    to: emailData.to,
+    timestamp: parseInt(emailData.timestamp),
+    timestampChecked: parseInt(Date.now())
+  };
 
-//   $.ajax({
-//     url: "https://3beeec6c.ngrok.io/mails/checked",
-//     dataType: "json",
-//     type: "post",
-//     crossDomain: true,
-//     contentType: "application/json",
-//     data: JSON.stringify(emailDataToSend),
-//     processData: false,
-//     success: function(data, textStatus, jQxhr) {
-//       console.log("success CheckedMail saved");
-//       console.log(data);
-//     },
-//     error: function(jqXhr, textStatus, errorThrown) {
-//       console.log("failure=============");
-//       console.log(errorThrown);
-//     }
-//   });
-// });
+  $.ajax({
+    url: serverURL + "/mails/checked",
+    dataType: "json",
+    type: "post",
+    crossDomain: true,
+    contentType: "application/json",
+    data: JSON.stringify(emailDataToSend),
+    processData: false,
+    success: function(data, textStatus, jQxhr) {
+      console.log("success CheckedMail saved");
+      console.log(data);
+      getDailyCheckedMailCount().then(dailyCheckedCount => {
+        drawDailyMailsPiechart(
+          dailyCheckedCount,
+          dailySentMailCountPieChart,
+          dailyReceivedMailCountPieChart
+        );
+      });
+    },
+    error: function(jqXhr, textStatus, errorThrown) {
+      console.log("failure=============");
+      console.log(errorThrown);
+    }
+  });
+});
 
 // DONE checked saved ============================
 
 // // DONE checked saved ============================
-// gmail.observe.on("send_message", function(url, body, emailData, xhr) {
-//   console.log("email_data");
-//   console.log(emailData);
+gmail.observe.on("send_message", function(url, body, emailData, xhr) {
+  console.log("email_data");
+  console.log(emailData);
 
-//   const emailDataToSend = {
-//     userMailId: gmail.get.user_email(),
-//     mailId: emailData["1"],
-//     subject: emailData["8"],
-//     from: emailData["2"],
-//     to: emailData["3"],
-//     timestamp: emailData["7"]
-//   };
-//   console.log("emailDataToSend");
-//   console.log(emailDataToSend);
+  const emailDataToSend = {
+    userMailId: gmail.get.user_email(),
+    mailId: emailData["1"],
+    subject: emailData["8"],
+    from: emailData["2"],
+    to: emailData["3"],
+    timestamp: parseInt(emailData["7"])
+  };
+  console.log("emailDataToSend");
+  console.log(emailDataToSend);
 
-//   $.ajax({
-//     url: "https://3beeec6c.ngrok.io/mails/sent",
-//     dataType: "json",
-//     type: "post",
-//     crossDomain: true,
-//     contentType: "application/json",
-//     data: JSON.stringify(emailDataToSend),
-//     processData: false,
-//     success: function(data, textStatus, jQxhr) {
-//       console.log("success SentMail saved");
-//       console.log(data);
-//     },
-//     error: function(jqXhr, textStatus, errorThrown) {
-//       console.log("failure=============");
-//       console.log(errorThrown);
-//     }
-//   });
-// });
+  $.ajax({
+    url: serverURL + "/mails/sent",
+    dataType: "json",
+    type: "post",
+    crossDomain: true,
+    contentType: "application/json",
+    data: JSON.stringify(emailDataToSend),
+    processData: false,
+    success: function(data, textStatus, jQxhr) {
+      console.log("success SentMail saved");
+      console.log(data);
+      getDailySentMailCount().then(dailySentCount => {
+        drawDailyMailsPiechart(
+          dailyCheckedMailCountPieChart,
+          dailySentCount,
+          dailyReceivedMailCountPieChart
+        );
+      });
+    },
+    error: function(jqXhr, textStatus, errorThrown) {
+      console.log("failure=============");
+      console.log(errorThrown);
+    }
+  });
+});
 // // DONE checked saved ============================
-alert("FFFFFFFF");
+alert("QQQQQ");
 gmail.observe.on("new_email", function(id, url, body, xhr) {
   console.log("new mail arrived");
 
@@ -1068,7 +1135,7 @@ gmail.observe.on("new_email", function(id, url, body, xhr) {
   const emailDataToSend = {
     userMailId: gmail.get.user_email(),
     mailId: xhr[0],
-    timestamp: tempTimeStamp
+    timestamp: parseInt(tempTimeStamp)
   };
   console.log(emailDataToSend);
 
@@ -1083,6 +1150,13 @@ gmail.observe.on("new_email", function(id, url, body, xhr) {
     success: function(data, textStatus, jQxhr) {
       console.log("success ReceivedMail saved");
       console.log(data);
+      getDailyReceivedMailCount().then(dailyReceivedCount => {
+        drawDailyMailsPiechart(
+          dailyCheckedMailCountPieChart,
+          dailySentMailCountPieChart,
+          dailyReceivedCount
+        );
+      });
     },
     error: function(jqXhr, textStatus, errorThrown) {
       console.log("failure=============");
@@ -1090,55 +1164,35 @@ gmail.observe.on("new_email", function(id, url, body, xhr) {
     }
   });
 });
+
+function drawDailyMailsPiechart(dailyChecked, dailySent, dailyReceived) {
+  dailyCheckedMailCountPieChart = dailyChecked;
+  dailySentMailCountPieChart = dailySent;
+  dailyReceivedMailCountPieChart = dailyReceived;
+  var ctx = document.getElementById("dailyMailPieChartCanvas").getContext("2d");
+  const colors = ["#d0181a", "#0354cb", "#49e461"];
+  const labels = ["Checked", "Sent", "Received"];
+  var myPieChart = new Chart(ctx, {
+    type: "pie",
+    data: {
+      datasets: [
+        {
+          data: [dailyChecked, dailySent, dailyReceived],
+          backgroundColor: colors
+        }
+      ],
+      labels: labels
+    },
+    responsive: true
+  });
+}
+
 gmail.observe.on("load", function() {
-  $.ajax({
-    url: serverURL + "/mails/daily",
-    dataType: "json",
-    type: "post",
-    crossDomain: true,
-    contentType: "application/json",
-    data: JSON.stringify(emailDataToSend),
-    processData: false,
-    success: function(data, textStatus, jQxhr) {
-      console.log("success ReceivedMail saved");
-      console.log(data);
-    },
-    error: function(jqXhr, textStatus, errorThrown) {
-      console.log("failure=============");
-      console.log(errorThrown);
-    }
+  Promise.all([
+    getDailyCheckedMailCount(),
+    getDailySentMailCount(),
+    getDailyReceivedMailCount()
+  ]).then(results => {
+    drawDailyMailsPiechart(results[0], results[1], results[2]);
   });
 });
-// gmail.observe.on("new_email", function(id, url, body, xhr) {
-//   console(id);
-//   console(url);
-//   console("udpated");
-//   console("udpated");
-//   console("udpated");
-//   console("udpated");
-
-//   const emailDataToSend = {
-//     userMailId: gmail.get.user_email(),
-//     mailId: xhr[0]
-//   };
-//   console.log("emailDataToSend");
-//   console.log(emailDataToSend);
-
-//   // $.ajax({
-//   //   url: serverURL + "/mails/received",
-//   //   dataType: "json",
-//   //   type: "post",
-//   //   crossDomain: true,
-//   //   contentType: "application/json",
-//   //   data: JSON.stringify(emailDataToSend),
-//   //   processData: false,
-//   //   success: function(data, textStatus, jQxhr) {
-//   //     console.log("success ReceivedMail saved");
-//   //     console.log(data);
-//   //   },
-//   //   error: function(jqXhr, textStatus, errorThrown) {
-//   //     console.log("failure=============");
-//   //     console.log(errorThrown);
-//   //   }
-//   // });
-// });
