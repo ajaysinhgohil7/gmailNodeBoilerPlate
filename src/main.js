@@ -163,11 +163,14 @@ $("#mainDiv").append(
             
             <div id="dailyCheckedMailPieChart" class="row pieChart">
               <div class="col-lg-6 ">
-                <div id="dailyMailPieChartCanvasDiv" class="category">
-                  <h2>
-                    Email By Category
-                  </h2>
-                </div>
+                  <div class="category">
+                    <h2>
+                      Email By Category
+                    </h2>
+                    <div id="dailyMailPieChartCanvasContainer">
+
+                    </div>
+                  </div>
               </div>
 
               <div class="col-lg-6 ">
@@ -1169,7 +1172,18 @@ function drawDailyMailsPiechart(dailyChecked, dailySent, dailyReceived) {
   dailyCheckedMailCountPieChart = dailyChecked;
   dailySentMailCountPieChart = dailySent;
   dailyReceivedMailCountPieChart = dailyReceived;
-  var ctx = document.getElementById("dailyMailPieChartCanvas").getContext("2d");
+
+  var dailyMailPieChartCanvasContainer = document.getElementById(
+    "dailyMailPieChartCanvasContainer"
+  );
+  dailyMailPieChartCanvasContainer.innerHTML = "&nbsp;";
+  $("#dailyMailPieChartCanvasContainer").append(
+    '<canvas id="dailyMailPieChartCanvasGraph"><canvas>'
+  );
+
+  var ctx = document
+    .getElementById("dailyMailPieChartCanvasGraph")
+    .getContext("2d");
   const colors = ["#d0181a", "#0354cb", "#49e461"];
   const labels = ["Checked", "Sent", "Received"];
   var myPieChart = new Chart(ctx, {
